@@ -1,6 +1,7 @@
 
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
+import {sequelize} from './sequelize';
 
 import schema from './schema/schema';
 
@@ -12,4 +13,15 @@ app.use('/graphql', graphqlHTTP({
     graphiql: true
 }));
 
-app.listen(8080, () => console.log('Example app listening on port 8080!'));
+// app.listen(8080, () => console.log('Example app listening on port 8080!'));
+
+const port = process.env.PORT || 8080;
+
+(async () => {
+  await sequelize.sync({force: false});
+
+  app.listen(
+      port,
+      () => console.info(`Server running on port ${port}`)
+    );
+})();
