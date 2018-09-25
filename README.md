@@ -1,6 +1,6 @@
-# Unicorn Farm:  ode.js 
+# Unicorn Farm
 Built with:
-1) node.js + express 
+1) node.js + express + typescript
 2) GraphQL https://graphql.org
 3) Sequelize Typescript https://github.com/RobinBuschmann/sequelize-typescript
 4) ReactNative Web
@@ -27,7 +27,7 @@ Tracking of unicorns. A flexible and easy to use back-end system set up. We have
 	- addLocation(name)
 	- moveUnicorn(unicornId, toLocationId)
 	
-# Sequelize
+# Sequelize Typescript
 
 - Sqlite3 DB engine
 - models found in *src/models*
