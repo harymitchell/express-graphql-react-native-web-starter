@@ -1,34 +1,36 @@
-/* 
-	I need a unicorn manager to keep track of my unicorns, so I'd like a flexible, easily used back-end system set up.
-	I have a pasture, a barn, and a corral, and unicorns may be kept in any of these locations. I need the ability to add a new unicorn. I need to be able to move unicorns from one place to another. I need to be able to see where all of my unicorns are.
-	This needs to be a fully-functional back end.
-	Please submit your code in a Github repo that I can access. 
-*/
-	
-MODULE UnicornManager	
-	addUnicorn(name)
-		new Unicorn(name).save()...
-		
-	moveUnicorn(unicorn, toLocation)
-		updateUnicorn(name)
-		
-	unicornSummary(): [{unicorn, location}]
-	
-CLASS Location
-	name: STRING   (example Pasture, Barn, Corral)
-	date_created: DATETIME
+# Unicorn Farm:  ode.js 
+Built with:
+1) node.js + express 
+2) GraphQL https://graphql.org
+3) Sequelize Typescript https://github.com/RobinBuschmann/sequelize-typescript
+4) ReactNative Web
 
-CLASS Unicorn
-	name: STRING
-	date_created: DATETIME
+# Business Requirements
+Tracking of unicorns. A flexible and easy to use back-end system set up. We have a pasture, a barn, and a corral, and unicorns may be kept in any of these locations. Must support these operations: add a new unicorn, move unicorns, see where all of my unicorns are.
+
+# Node Express Typescript
+
+- *src/server.ts* is the Express app
+- uses a single route for graphql queries: */graphql*
+
+# GraphQL
+
+- schemas defined in *src/schema/schema.ts*
+- Defines a LocationType and a UnicornType
+- Root Queries
+	- unicorn(id)
+	- location(id)
+	- unicorns(search)
+	- locations(search)
+- Mutations
+	- addUnicorn(name)
+	- addLocation(name)
+	- moveUnicorn(unicornId, toLocationId)
 	
-CLASS UnicornLocationActivity
-	// providing current and historical view
-	unicorn: UNICORN
-	location: LOCATION
-	isCurrent: BOOLEAN
-	date_created: DATETIME
-	
-	
-	
-	
+# Sequelize
+
+- Sqlite3 DB engine
+- models found in *src/models*
+	- Location
+	- Unicorn
+
