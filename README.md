@@ -59,3 +59,9 @@ Tracking of unicorns. A flexible and easy to use back-end system set up. We have
 
 - Live web-app located at https://unicorn-manager-harymitchell.c9users.io:8081
 - GraphQL server located at https://unicorn-manager-harymitchell.c9users.io:8080/graphql
+
+
+## To run dev server, start all in separate terminals
+1) > npm run watch-ts
+1) /react-native-client > npm run start-web
+2) /src > npm run watch-node
