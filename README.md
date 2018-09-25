@@ -27,6 +27,17 @@ Tracking of unicorns. A flexible and easy to use back-end system set up. We have
 	- addLocation(name)
 	- moveUnicorn(unicornId, toLocationId)
 	
+## Test Queries
+
+- mutation { addUnicorn(name:"Larry"){ id name } } 
+- mutation { addLocation(name:"Barn"){ id name } }
+- mutation { moveUnicorn(unicornId:2, toLocationId:3)
+- { id name location{ id name } } }
+- { location(id:2){ name id } }
+- { locations{ name id unicorns{ name id } } }
+- { unicorn(id:2){ name id } }
+- { unicorns (search:""){ name id location{ name } } }
+	
 # Sequelize Typescript
 
 - Sqlite3 DB engine
