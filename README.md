@@ -45,3 +45,17 @@ Tracking of unicorns. A flexible and easy to use back-end system set up. We have
 	- Location
 	- Unicorn
 
+# React Native Web
+
+- bootstrapped with *create-react-native-app*
+- *react-native-client/* directory
+- Uses Apollo https://www.apollographql.com
+- Components
+	- UnicornList: displays unicorns and locations
+	- AddUnicorn: modal for adding a new unicorn
+	- UpdateUnicorn: modal for moving unicorns locations
+	
+# Development and Deployment
+
+- Live web-app located at https://unicorn-manager-harymitchell.c9users.io:8081
+- GraphQL server located at https://unicorn-manager-harymitchell.c9users.io:8080/graphql
