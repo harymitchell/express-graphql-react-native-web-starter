@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, Button, TextInput } from 'react-native'
+import { View, Text, StyleSheet, Button, TextInput, TouchableOpacity, Picker  } from 'react-native'
+import Modal from 'modal-enhanced-react-native-web';
 
 import { gql } from 'apollo-boost';
 import { graphql, compose  } from 'react-apollo';
@@ -9,7 +10,7 @@ import { addUnicornMutation, getUnicornsQuery } from '../queries/queries';
 class AddUnicorn extends Component {
     constructor(props) {
         super(props);
-        this.state = { name: '...new unicorn' };
+        this.state = { visibleModal: null, name: '...new unicorn' };
     }
     onAddUnicorn(){
         const name = this.state.name;
@@ -19,24 +20,39 @@ class AddUnicorn extends Component {
             },
             refetchQueries: [{ query: getUnicornsQuery }]
         });
-        this.setState({ name: '...new unicorn'});
+        this.setState({ visibleModal: false, name: '...new unicorn'});
     }
+    _renderButton = (text, onPress) => (
+        <TouchableOpacity onPress={onPress}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>{text}</Text>
+          </View>
+        </TouchableOpacity>
+     );
     render() {
         return (
-            <View style={styles.container}>
-                <Text>Add Unicorn:</Text>
-                <TextInput
-                    style={{height: 20, borderColor: 'gray', borderWidth: 1}}
-                    onChangeText={(name) => this.setState({ name: name})}
-                    value={this.state.name}
-                />
-                <Button
-                  onPress={this.onAddUnicorn.bind(this)}
-                  title="Add Unicorn"
-                  color="blue"
-                  accessibilityLabel="Add a unicorn."
-                />
-            </View>
+          <View>
+            {this._renderButton("Add Unicorn", () => {this.setState({visibleModal: true})})}
+            <Modal
+              isVisible={this.state.visibleModal}
+              onBackdropPress={() => this.setState({ visibleModal: false })}
+            >
+              <View style={styles.modalContent}>
+                  <Text style={styles.h2text}>Add Unicorn</Text>
+                  <TextInput
+                      style={{height: 20, borderColor: 'gray', borderWidth: 1}}
+                      onChangeText={(name) => this.setState({ name: name})}
+                      value={this.state.name}
+                  />
+                  <Button
+                    onPress={this.onAddUnicorn.bind(this)}
+                    title="Add Unicorn"
+                    color="blue"
+                    accessibilityLabel="Add a unicorn."
+                  />
+              </View>
+            </Modal>
+          </View>
         )
     }
 }
@@ -70,5 +86,26 @@ const styles = StyleSheet.create({
   },
   location: {
     color: 'blue'
-  }
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 22,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 4,
+    borderColor: "rgba(0, 0, 0, 0.1)"
+  },
+  buttonText: {
+    color: 'white'
+  },
+  button: {
+    // color: 'white',
+    backgroundColor: "blue",
+    padding: 12,
+    margin: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 4,
+    borderColor: "rgba(0, 0, 0, 0.1)"
+  },
 })

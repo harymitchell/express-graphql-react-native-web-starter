@@ -34,6 +34,7 @@
     "express-graphql": "^0.6.12",
     "graphql": "^0.13.2",
     "lodash": "^4.17.11",
+    "modal-enhanced-react-native-web": "^0.1.9",
     "react-apollo": "^2.1.11",
     "react-native": "^0.52.0",
     "react-native-elements": "^0.19.1",

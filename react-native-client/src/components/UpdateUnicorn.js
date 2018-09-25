@@ -7,31 +7,16 @@ import { graphql, compose } from 'react-apollo';
 
 import { getUnicornsQuery, updateUnicornMutation } from '../queries/queries';
 
-import UpdateUnicorn from './UpdateUnicorn';
-
-class UnicornList extends Component {
+class UpdateUnicorn extends Component {
     constructor(props) {
         super(props);
-        this.state = { visibleModal: null, selectedUnicorn: null };
-    }
-    onEditUnicorn(item){
-        console.log("item",item);
-        console.log("state", this.state);
-        this.setState({ visibleModal: true, selectedUnicorn: item, newLocation: null });
-    }
-    renderFlatListItem(item) {
-        return (
-            <View style={styles.flatview}>
-                <Text style={styles.name}>{item.name}</Text>
-                <Text style={styles.location}>{item.location ? item.location.name : 'Location Unknown!'}</Text>
-                <Text style={styles.edit} onPress={this.onEditUnicorn.bind(this, item)}>edit</Text>
-            </View>
-    	   );
+        console.log("update unicorn", this.props, this.state)
+        this.state = { newLocation: this.props.selectedUnicorn && this.props.selectedUnicorn.location ? this.props.selectedUnicorn.location.id : "" };
     }
     _renderButton = (text, onPress) => (
         <TouchableOpacity onPress={onPress}>
           <View style={styles.button}>
-            <Text>{text}</Text>
+            <Text style={styles.buttonText}> {text}</Text>
           </View>
         </TouchableOpacity>
      );
@@ -45,11 +30,28 @@ class UnicornList extends Component {
           this.scrollViewRef.scrollTo(p);
         }
     };
+    pickerVal(){
+      console.log("pickerVal", this.state, this.props)
+      if (this.state.newLocation){
+        return this.state.newLocation;
+      } else if (this.props.selectedUnicorn && this.props.selectedUnicorn.location){
+        return this.props.selectedUnicorn.location.id;
+      } else {
+        return "1";
+      }
+    }
+    componentDidUpdate(prevProps) {
+        console.log("componentDidUpdate")
+      if (this.props.selectedUnicorn !== prevProps.selectedUnicorn) {
+       this.setState({ newLocation: null});
+      }
+    }
     _renderModalContent = () => (
         <View style={styles.modalContent}>
+            <Text>{this.props.selectedUnicorn && this.props.selectedUnicorn.name}</Text>
             <Text>Change Location:</Text>
             <Picker
-              selectedValue={this.state.selectedUnicorn && this.state.selectedUnicorn.location ? this.state.selectedUnicorn.location.id : ''}
+              selectedValue={this.pickerVal()}
               style={{ height: 50, width: 100 }}
               onValueChange={(itemValue, itemIndex) => {
                 this.setState({newLocation: itemValue});
@@ -60,11 +62,11 @@ class UnicornList extends Component {
             </Picker>
             {this._renderButton("Save", () => {
                 console.log("save")
-                console.log("state",this.state);
+                console.log("payload",{toLocationId: this.state.newLocation,unicornId: this.props.selectedUnicorn.id});
                 this.props.updateUnicornMutation({
                     variables: {
-                        toLocationId: this.state.newLocation,
-                        unicornId: this.state.selectedUnicorn.id
+                        toLocationId: this.pickerVal(),
+                        unicornId: this.props.selectedUnicorn.id
                     },
                     refetchQueries: [{ query: getUnicornsQuery }]
                 });
@@ -72,43 +74,17 @@ class UnicornList extends Component {
             })}
         </View>
     );
-    showUnicorns(){
-        const data = this.props.data;
-        console.log(data);
-        if(data.loading){
-            return (<Text>Loading unicorns...</Text>);
-        } else {
-            return (
-                <View>
-                    <Text style={styles.h2text}>Our Unicorns</Text>
-                    <FlatList
-                      data={data.unicorns}
-                      renderItem={({item}) => this.renderFlatListItem(item)}
-                    />
-                    <Modal
-                      isVisible={this.state.visibleModal}
-                      onBackdropPress={() => this.setState({ visibleModal: false })}
-                    >
-                      <UpdateUnicorn selectedUnicorn={this.state.selectedUnicorn}></UpdateUnicorn>
-                    </Modal>
-                </View>
-            );
-        }
-    }
     render() {
         return (
-            <View style={styles.container}>
-                {this.showUnicorns()}
-            </View>
+              this._renderModalContent()
         )
     }
 }
 
-export default graphql(getUnicornsQuery)(UnicornList);
-// export default compose(
-//     graphql(getUnicornsQuery, { name: "getUnicornsQuery" }),
-//     graphql(updateUnicornMutation, { name: "updateUnicornMutation" }),
-// )(UnicornList);
+export default compose(
+    graphql(getUnicornsQuery, { name: "getUnicornsQuery" }),
+    graphql(updateUnicornMutation, { name: "updateUnicornMutation" }),
+)(UpdateUnicorn);
 
 
 
@@ -149,8 +125,10 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderColor: "rgba(0, 0, 0, 0.1)"
   },
+  buttonText: {
+    color: 'white'
+  },
   button: {
-    // color: 'white',
     backgroundColor: "blue",
     padding: 12,
     margin: 16,
