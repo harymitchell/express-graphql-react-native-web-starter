@@ -7,6 +7,11 @@ import schema from './schema/schema';
 
 const app = express();
 
+var cors = require('cors');
+
+// use it before all route definitions
+app.use(cors({origin: 'https://unicorn-manager-harymitchell.c9users.io:8081'}));
+
 // bind express with graphql
 app.use('/graphql', graphqlHTTP({
     schema,
