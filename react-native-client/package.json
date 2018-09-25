@@ -1,0 +1,38 @@
+{
+  "name": "react-native-client",
+  "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
+  "scripts": {
+    "start-web": "PORT=8081 react-scripts start",
+    "build-web": "react-scripts build",
+    "test-web": "react-scripts test --env=jsdom",
+    "eject-web": "react-scripts eject",
+    "start-native": "react-native-scripts start",
+    "eject-native": "react-native-scripts eject",
+    "android": "react-native-scripts android",
+    "ios": "react-native-scripts ios",
+    "test-native": "node node_modules/jest/bin/jest.js --watch",
+    "test": "npm run test-web && npm run test-native"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "expo": "^25.1.2",
+    "react": "16.5.1",
+    "react-art": "16.5.1",
+    "react-dom": "16.5.1",
+    "react-native-web": "0.9.x",
+    "react-scripts": "1.1.5"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-jsx-source": "^6.22.0",
+    "babel-preset-expo": "^4.0.0",
+    "flow-bin": "^0.81.0",
+    "jest-expo": "^30.0.0",
+    "react-native-scripts": "^2.0.1",
+    "react-test-renderer": "^16.2.0"
+  }
+}
