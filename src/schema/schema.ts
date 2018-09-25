@@ -1,5 +1,6 @@
 const graphql = require('graphql');
 import _ from 'lodash';
+import {Sequelize} from 'sequelize-typescript';
 
 import {Location} from '../models/Location';
 import {Unicorn} from '../models/Unicorn';
@@ -8,7 +9,8 @@ const { GraphQLObjectType,
         GraphQLString, 
         GraphQLSchema,
         GraphQLID,
-        GraphQLList
+        GraphQLList,
+        GraphQLNonNull
     } = graphql;
 
 // dummy data
@@ -34,7 +36,7 @@ const UnicornType = new GraphQLObjectType({
         location: { 
             type: LocationType,
             resolve(unicorn, args){
-                return _.find(locations, { id: unicorn.locationId });
+                return Location.findById(unicorn.locationId);
             } 
         }
     })
@@ -46,9 +48,13 @@ const LocationType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         unicorns: {
-            type: new GraphQLList(LocationType),
+            type: new GraphQLList(UnicornType),
             resolve(location, args){
-                return _.filter(unicorns, { locationId: location.id });
+                return Unicorn.findAll({
+                  where: {
+                    locationId: location.id
+                  }
+                });
             }
         }
     })
@@ -61,25 +67,40 @@ const RootQuery = new GraphQLObjectType({
             type: UnicornType,
             args: { id: { type: GraphQLID } },
             resolve(parent, args){
-                return _.find(unicorns, { id: args.id });
+                return Unicorn.findById(args.id);
             }
         },
         location: {
             type: LocationType,
             args: { id: { type: GraphQLID } },
             resolve(parent, args){
-                return _.find(locations, { id: args.id });
+                return Location.findById(args.id);
+            }
+        },
+        locations: {
+            type:  new GraphQLList(LocationType),
+            args: { search: { type: GraphQLString } },
+            resolve(parent, args){
+                return Location.findAll(args.search ? {
+                  where: {
+                    name: {
+                        [Sequelize.Op.like]: args.search
+                    }
+                  }
+                }: {});
             }
         },
         unicorns: {
             type:  new GraphQLList(UnicornType),
             args: { search: { type: GraphQLString } },
             resolve(parent, args){
-                if (args.search){
-                    return _.filter(unicorns, function(o) { return o.name.match(new RegExp(args.search))});
-                } else {
-                    return unicorns;
-                }
+                return Unicorn.findAll(args.search ? {
+                  where: {
+                    name: {
+                        [Sequelize.Op.like]: args.search
+                    }
+                  }
+                }: {});
             }
         }
     }});
@@ -90,15 +111,42 @@ const Mutation = new GraphQLObjectType({
         addUnicorn: {
             type: UnicornType,
             args: {
-                name: { type: GraphQLString }
+                name: { type: new GraphQLNonNull(GraphQLString) }
             },
             resolve(parent, args){
-                console.log()
-                const unicorn = Unicorn.create({
+                return Unicorn.create({
                     name: args.name
                 });
-                return unicorn
-                // return unicorn.save();
+            }
+        },
+        addLocation: {
+            type: LocationType,
+            args: {
+                name: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve(parent, args){
+                return Location.create({
+                    name: args.name
+                });
+            }
+        },
+        moveUnicorn: {
+            type: UnicornType,
+            args: {
+                unicornId: { type: new GraphQLNonNull(GraphQLID) }
+                toLocationId: { type: new GraphQLNonNull(GraphQLID) }
+            },
+            resolve(parent, args){
+                return Unicorn.update({
+                    locationId: args.toLocationId
+                }, {
+                    where: {id: args.unicornId}
+                    returning: true,
+                    plain: true
+                })
+                .then(res => {
+                    return Unicorn.findById(args.unicornId);
+                });
             }
         }
     }
