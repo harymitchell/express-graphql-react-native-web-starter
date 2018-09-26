@@ -50,10 +50,12 @@ Tracking of unicorns. A flexible and easy to use back-end system set up. We have
 - bootstrapped with *create-react-native-app*
 - *react-native-client/* directory
 - Uses Apollo https://www.apollographql.com
-- Components
+- App entry point is *react-native-client/src/App.js*
+- Components located in *react-native-client/src/components*:
 	- UnicornList: displays unicorns and locations
 	- AddUnicorn: modal for adding a new unicorn
 	- UpdateUnicorn: modal for moving unicorns locations
+- GraphQL queries located in *react-native-client/src/queries/queries.js*
 	
 # Development and Deployment
 
@@ -62,6 +64,6 @@ Tracking of unicorns. A flexible and easy to use back-end system set up. We have
 
 
 ## To run dev server, start all in separate terminals
-1) > npm run watch-ts
-1) /react-native-client > npm run start-web
-2) /src > npm run watch-node
+1) >npm run watch-ts
+1) >npm run watch-node
+2) >cd react-native-client && npm run start-web
