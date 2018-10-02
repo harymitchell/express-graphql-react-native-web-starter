@@ -56,12 +56,6 @@ Tracking of unicorns. A flexible and easy to use back-end system set up. We have
 	- AddUnicorn: modal for adding a new unicorn
 	- UpdateUnicorn: modal for moving unicorns locations
 - GraphQL queries located in *react-native-client/src/queries/queries.js*
-	
-# Development and Deployment
-
-- Live web-app located at https://unicorn-manager-harymitchell.c9users.io:8081
-- GraphQL server located at https://unicorn-manager-harymitchell.c9users.io:8080/graphql
-
 
 ## To run dev server, start all in separate terminals
 1) >npm run watch-ts
