@@ -1,4 +1,4 @@
-# Unicorn Farm
+# Express TypeScript GraphQL ReactNativeWeb Starter
 Built with:
 1) node.js + express + typescript
 2) GraphQL https://graphql.org
